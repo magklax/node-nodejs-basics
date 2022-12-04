@@ -3,30 +3,23 @@ import { Worker } from "worker_threads";
 import path from "path";
 import { fileURLToPath } from "url";
 
+const INPUT_NUM = 10;
+const cpuCores = cpus();
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const pathToFile = path.join(__dirname, "worker.js");
 
 const performCalculations = async () => {
-  let startNumber = 9;
-  const cpuCores = cpus();
-
   const rowResult = await Promise.allSettled(
     cpuCores.map(
       (_, idx) =>
         new Promise((resolve, reject) => {
           const worker = new Worker(pathToFile, {
-            workerData: (startNumber += 1),
+            workerData: INPUT_NUM + idx,
           });
 
-          worker.on("message", (data) => {
-            console.log(`Worker ${idx + 1} sent data to the parent port`);
+          worker.on("message", resolve);
 
-            resolve(data);
-          });
-
-          worker.on("error", (err) => {
-            reject(err);
-          });
+          worker.on("error", reject);
 
           worker.on("exit", (code) => {
             if (code !== 0)
