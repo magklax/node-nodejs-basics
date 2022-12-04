@@ -24,7 +24,7 @@ const copy = async () =>
       }
     })
     .catch((_err) => {
-      throw new Error(errorMassage);
+      console.log(errorMassage);
     });
 
 copy();
