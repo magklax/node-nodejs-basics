@@ -9,4 +9,4 @@ const spawnChildProcess = async (args) => {
   fork(pathToScript, args);
 };
 
-spawnChildProcess(process.argv.slice(2));
+spawnChildProcess(['someArgument1', 'someArgument2']);
